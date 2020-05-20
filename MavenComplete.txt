@@ -1,0 +1,630 @@
+Maven:
+
+1.Introduction
+2.POM File[Project Object Model]
+
+
+1.Introduction
+--------------
+---------------
+
+Maven is a "Yiddish"[German lang], its meaning is "Accumulator of knowledge".
+Maven is a build tool, It will perform
+1. Directory structures to the applications.(Desktop/web..)
+2. Downloads the required dependencies[JARS]
+3. Compile the source code
+4. Compile Test code.
+5. packaging the applications(jar/war/ear)
+6. Run applications
+7. Starts the server automatically
+8. Deploying the application(on server)
+9. Perform Unit Testing
+10. Prepare Reports and Documents
+11. Undeployment of our applications
+12. Stop server.
+.......
+.......many more jobs done by Maven
+
+
+Plugins:
+get dependencies
+compilation
+test
+run
+packaging
+deploy
+start server
+reports
+.....
+POM:
+Project configuration details are existed here like dependencies, repositories, plugins, resources..
+
+
+
+
+2.
+POM (Project Object Model) :
+----------------------------
+----------------------------
+-It is heart in Maven
+-It provides all the project build configurations which are required by MAVEN.
+-It is an XML file, in the initial versions of Maven, POM file name is project.xml, later on pom.xml
+-When we create Maven project then pom.xml file will be created automatically.
+-In Maven projects, pom.xml  file is able to provide no of responsibilities.
+  1.Project Description
+  2.Repository
+  3.Dependency Management
+  4.Project Inheritance
+  5.Build Configurations
+  6.Build profiles
+
+
+1.Project Description
+  details about project name,version name, packaging type..
+pom.xml
+<project..>
+   <modelVersion>4.0.0</modelVersion>------supports Maven version 2.x and 3.x(4.0 is not a maven version)
+   <groupId>com.example.banking<groupId>
+   <artifactId>acccounts</artifactId>
+   <description>Application for Accounting</description>
+   <packaging>jar/war/ear</packaging>
+---
+---
+</project>
+
+groupId - is an unique id for our company i.e. package name
+artifactId - Application name
+
+2.Repository
+------------
+Repository is a place[location in system, in internet, a system in our company] which will provide all the dependent jar files to our application.
+
+Repositories are able to manage all the jar files which are required by our applications.
+
+There are three types of Repositories are existed in MAVEN.
+1. Local Repository
+2. Central Repository
+3. Remote Repository
+
+1. Local Repository
+  - It is a location in our system, which will be created by any mvn command initially.
+  - In our system local repository is existed at "C:\Users\sdegaonk\.m2\repository".
+  - When we require jar files in our application then Maven firest searches in local repository.
+
+2. Central Repository
+  - It is a default repository in Maven,it exists in internet at a particular URL.
+  - Apache Software Foundations provides a separate central repository in the form of "https://repo.maven.apache.org/maven2/" 
+  - We can use third party provided central repositories in Maven
+     1. https://mvnrepository.com
+     2. https://repository.jboss.org/nexus/content/groups/public/
+
+If we want to use third party provided  repositories in our applications then we must configure it in pom.xml
+<project>
+ ..
+  <repositories>
+     <repository>
+       <id>jboss</id>
+        <name>jboss repo</name>
+         <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+      </repository>
+  </repositories>
+ ....
+</project>
+
+3.Remote Repositories
+  If the dependencies are not present in local repo, central repo then Maven will search for them in Remote repo
+
+     3. http://10.109.32.183:8081/nexus/content/groups/public
+
+
+3. Dependency Management
+   - In Maven projects, dependency means that a dependent JAR file
+   - Maven is not giving any option to the developers to download the required JAR files, Maven will download the required jar files and Maven will keep that JAR files in our application, but we must specify which dependencies we need in our applications.
+
+<project>
+ ....
+   <dependencies>
+     <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>3.4.6-Final</version>
+        <scope>provided</scope>
+     <dependency>
+   <dependencies>
+ ...
+</project>
+
+Maven is following Trasitive dependencies
+A---->B----->C----->D
+
+Scopes in Maven:
+1. compile
+2. provided
+3. runtime
+4. test
+5. system
+6. import
+
+1.compile
+  required jar file during compile,test and run e.g. hibernate core
+
+2.provided
+  required jar file during compile and test but not at run time e.g. servlet-api.jar as application server provides servlet-api.jar at runtime
+
+3.runtime
+  jar available for test cases and runtime
+
+4.test
+  available at test compilation and test execution e.g. junit
+5.system
+  will not get any jar from remote repo
+  otherwise same as provided
+6.import
+  import repo
+
+
+
+4.Project Inheritance
+----------------------
+  Getting configuration details from one POM to another.
+Parent POM:
+<project..>
+ <modelversion>4.0.0</modelVersion>
+ <groupId>com.example</groupId>
+ <artifactId>my-parent</artifactId>
+ <version>1.0</version>
+ <packaging>pom</packaging>
+ ---
+</project>
+
+Child POM
+<project...>
+  <parent>
+    <groupId>com.example</groupId>
+    <artifactId>my-parent</artifactId>
+    <version>1.0.0</version>
+  </parent>
+---
+</project>
+
+
+5.Build Configurations
+----------------------
+Plugin Configurations
+Resources Configurations
+
+Plugin Configurations:
+There are two types of Plugins
+1. Build Plugins
+2. Reporting Plugins
+
+Build Plugins:
+1. clean:
+2. compiler
+3. deploy
+4. install
+5. resources
+6. ear: - create ear file for our current project
+7. jar
+8. war
+
+Reporting Plugins:
+1.javadoc:
+2.project-info-reports
+3.surfire-reports
+----
+----
+
+Maven by default uses 1.5 compiler, to change compiler:
+<project>
+  <build>
+    <plugins>
+      <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-compiler-plugin</artifactId>
+         <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+         </configuration>
+      </plugin>
+    </plugins>
+    </build>
+</project>
+
+
+2.Resource Configurations
+-------------------------
+<project
+  <build>
+    <resources>
+      <resource>
+         <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+</build>
+
+6.Build profiles
+----------------
+Development Mode
+Testing Mode
+Production Mode
+
+under resources folder db.properties
+------------------------------------
+jdbc.connection.url=${jdbc.connection.url}
+
+<project>
+---
+ <profiles>
+  <profile>
+     <id>development</id>
+     <activation>
+         <activeByDefault>true</activeByDefault>
+     </activation>
+     <properties>
+       <jdbc.connection.url>jdbc:oracle:thin:@localhost:1521:XE</jdbc.connection.url>
+     </properties>
+   </profile>
+   
+  <profile>
+     <id>test</id>
+     <properties>
+       <jdbc.connection.url>jdbc:mysql://localhost:3306/db_name</jdbc.connection.url>
+     </properties>
+   </profile>
+ </profiles>
+</project>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

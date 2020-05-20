@@ -1,0 +1,416 @@
+What is Maven 
+2 ------------- 
+3 
+ 
+4 At its simplest, Maven is a build tool 
+5  - It always produces one artifact(component) 
+6  - It helps us manage dependencies 
+7 
+ 
+8 It can also be used as a project management tool 
+9  - It handles versioning and releases 
+10  - Describes what your project is doing or what it produces 
+11  - Can easily produce javadocs as well as other site information 
+12 
+ 
+13 Who owns it 
+14 ----------- 
+15 -Maven is managed by the Apache Software Foundation 
+16 -Maven sites are built with Maven 
+17 -open source 
+18 
+ 
+19 Why do you want to use it 
+20 ------------------------- 
+21 -Repeatable builds 
+22  we can recreate our build for any enviornment(DevOps,WebOps...) 
+23 -Transitive dependencies 
+24  downloading a dependency will also pull other items it needs 
+25 -contains everything it needs for your environment 
+26 -works with a localrepo 
+27 -works with your IDE, but also standalone 
+28 -The preferrred choice for working with build tools like Jenkins or Cruise Control 
+29 
+ 
+30 
+ 
+31 Ant 
+32 --- 
+33 -Ant was developed to be a replacement for a build tool called "Make" 
+34 -Designed to be cross platform 
+-Built on top of Java and XML 
+36 -Very procedural 
+37 
+ 
+38 Ant vs Maven 
+39 ------------ 
+40 -Ant really isn't build tool as much as it is a scripting tool 
+41 -You have to explicitly do everything in Ant 
+42 
+ 
+43   <target name="clean" description="clean up"> 
+44     <!-- Delete the ${build} and ${dist} directory trees --> 
+45     <delete dir="${build}" /> 
+46   </target> 
+47 -We have to define everything that we want to do 
+48  clean,clear,cleanup etc.. 
+49 -A lot of tribal knowledge nothing carries over 
+50 
+ 
+51 Maven : 
+52 ------- 
+53 -Maven is a full fledged build tool 
+54 -A lot of implicit functionality 
+55 -Consistency across projects 
+56 -Also capable to achieve inheritance in projects 
+57 -Transitive dependencies (can be achieved using Ivy with Ant though) 
+58 -Build around versioning 
+59 
+ 
+60 Ant vs Maven summary 
+61 -------------------- 
+62 -Ant is very declarative 
+63 -Maven follows a convention over configuration model 
+64 -Ant is may be easier to learn but it really is only beneficial as a scripting tool 
+65 -Maven is really centered around managing your entire project's lifecycle 
+66 
+ 
+67 
+ 
+68 file name must be pom.xml 
+69 POM - Project Object Model 
+70 -------------------------- 
+71 
+ 
+72 <project> 
+73     <groupId>com.pluralsight</groupId> ------------company name web address 
+74     <artifactId>HelloWorld</aritifactId> 
+75     <version>1.0-SNAPSHOT </version>------------------SNAPSHOT must be in capital letter 
+76     <moduleVersion>4.0.0</modelVersion> 
+77     <packaging>jar</packaging> 
+78 </project> 
+79 
+ 
+80 
+ 
+81 Maven is expecting standard folder structure  
+82 HelloWorld 
+83  -src 
+84     main 
+85       java 
+86         HelloWorld.java 
+87  -target 
+88  -pom.xml 
+89 
+ 
+90 
+ 
+91 target 
+92 ------ 
+93 -where everything gets compiled to 
+94 -Also where tests get ran from 
+95 -Contents in this directory get packaged into a jar,war,ear etc. 
+96 
+ 
+97 pom.xml 
+98 ------- 
+99 can be divided into 4 basic parts : 
+100 -Project Information 
+101  groupId----------package name 
+102  artifactId-------application name 
+103  version 
+104  packaging-------jar war ear.. 
+105 -Dependencies 
+106  Direct dependencies used in our application 
+107 -Build 
+108  Plugins 
+109  Directory Structure 
+110 -Repositories 
+111  Referring to central or any shared repository 
+112 
+ 
+113 Dependencies 
+114 ------------ 
+115 -What we want to use in our application 
+116 -Dependencies are imported by their naming convention 
+117  Often considered the most confusing part of Maven 
+118 -We have to know the groupId,artifactId and the version of what we are looking for 
+119 -Added to a dependencies section to our pom file 
+120 
+ 
+121 -Just list the dependency that we want 
+122  Transitive dependencies will be pulled in by Maven 
+123 -Need at a minimum 3 things 
+124  groupId 
+125  artifactId 
+126  version 
+<dependencies> 
+129        <dependency> 
+130          <groupId>commons-lang</groupId> 
+131          <artifactId>commons-lang</artifactId> 
+132          <version>2.1</version> 
+133        <dependency> 
+134     </dependencies> 
+135 
+ 
+136 Goals 
+137 ----- 
+138 -clean 
+139  Deletes the target directory and any generated resources 
+140 
+ 
+141 -compile 
+142  compiles all source code, generates any files, copies resources to our classes directory 
+143 
+ 
+144 -package 
+145  Runs the compile command first, runs any tests, packages the app based off its packaging type 
+146 
+ 
+147 -install 
+148  Runs the package command and then installs it in your local repo 
+149 
+ 
+150 -deploy 
+151  Runs the install command and then deploys it to a corporate repository 
+152  often confused with web server deployment 
+153 
+ 
+154 
+ 
+155 Local Repository 
+156 ---------------- 
+157 -Where Maven stores everything it downloads 
+158  Installs in your home directory\.m2 
+159 -Stores artifacts using the information that you provided for artifactId, groupId and version 
+160   e.g. 
+161   C:\Users\sdegaonk\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar 
+162 -Avoids duplication by copying it in every project and storing it in your SCM 
+163 
+ 
+164 Defaults 
+165 -------- 
+166 These are all the defaults that Maven has, but how do we override them? 
+167 -The build section! 
+168 
+ 
+169 e.g. in pom.xml 
+170      <build> 
+171        <finalName>foo</finalName> 
+172      </build> 
+173 
+ 
+174 
+ 
+175 
+ 
+176 
+ 
+177 Versions: 
+178 -------- 
+179 Version numbers are up to your corporate strategy 
+180 SNAPSHOT : download latest version 
+181 -Development starts off as a SNAPSHOT 
+182  myapp-1.0-SNAPSHOT.jar 
+183  Changes always downloaded 
+184  Saves you from rereleasing versions for development 
+185  Never deploy to production with a SNAPSHOT 
+186 -A release doesn't have a specific naming convention 
+187  myapp-1.0.jar 
+188  myapp-1.0.1.jar 
+189 -Industry common terms, but don't affect maven 
+190  myapp-1.0-M1.jar(milestone release) 
+191  myapp-1.0-RC1.jar(release candidate) 
+192  myapp-1.0-RELEASE.jar(release) 
+193  myapp-1.0-Final.jar(release) 
+194 
+ 
+195 Types 
+Current core packaging types are: 
+198 -pom,jar,maven-plugin,ejb,war,ear,rar,par 
+199 -The default packaging type is jar 
+200 The type of pom is referred to as a dependency pom 
+201 -Downloads dependencies from that pom 
+202 
+ 
+203 
+ 
+204 <project> 
+205     <groupId>com.pluralsight</groupId> ------------company name web address 
+206     <artifactId>HelloWorld</aritifactId> 
+207     <version>1.0-SNAPSHOT </version>------------------SNAPSHOT must be in capital letter 
+208     <moduleVersion>4.0.0</modelVersion> 
+209     <packaging>jar</packaging>--------------------jar,war,rar,par.. 
+210 </project> 
+211 
+ 
+212 
+ 
+213 Transitive Dependencies 
+214 ----------------------- 
+215 -The main reason people begin using maven 
+216  e.g. 
+217   If we add a dependency: 
+218   <dependency> 
+219     <groupId>org.hibernate</groupId> 
+220     <artifactId>hibernate-core</artifactId> 
+221     <version>4.1.6.Final</version> 
+222     <scope>compile</scope> 
+223   </dependency> 
+224 If we add a dependency it downloads it's transitive dependencies : 
+225    antrl 
+226    dom4j 
+227    hibernate-commons-annotations 
+228    hibernate-core 
+229    hibernate-jpa 
+230    javassist 
+231    jboss-logging 
+232    jboss-transaction-api_1.1_spec 
+233 
+ 
+234 junit has hamcrest.jar dependency 
+235 
+ 
+236 Scope 
+237 ----- 
+238 There are 6 scopes available for dependencies: 
+239 -compile - default scope, artifacts available everywhere 
+240 -provided - like compile, means that the artifact is going to be provided where it is deployed 
+241  servlet-api.jar 
+242  xml-apis 
+243  Available in all phases, but not included in final artifact 
+244 -runtime - not needed for compilation, but needed for execution 
+245  e.g. jdbc jar 
+246 -test - only available for the test compilation and execution phase 
+247 -system - similar to provided, you specify a path to the jar on your file system 
+248  Very brittle and defeats the purpose of maven, don't use! 
+249 -import - advanced topic, deals with dependencyManagement sections 
+250 
+ 
+251 
+ 
+252 
+ 
+253 Repositories: 
+254 ------------- 
+255 -simply just a http accessible location that you download files from  
+256 -Default location 
+257  http://repo.maven.apache.org/maven2 
+258 -Multiple repositories allowed 
+259 -Corporate Repository 
+260  Nexus(this is what the default repo is built  
+ Artifactory 
+262 
+ 
+263 Dependency Repository 
+264 --------------------- 
+265 -Where we download all of our dependencies from 
+266  can contain just releases and/or snapshots 
+267  Not uncommon to have them in separate repositories 
+268 
+ 
+269 -How do we specify our own repository 
+270   
+271  <repositories> 
+272     <repository> 
+273        <id>spring-snapshot</id> 
+274        <name>Spring Maven SNAPSHOT Repository</name> 
+275        <url>http://repo.springsource.org/libs-snapshot</url> 
+276       <snapshots> 
+277          <enabled>true</enabled> 
+278       </snapshots> 
+279       <releases> 
+280         <enabled>false</enabled> 
+281       </releases> 
+282    </repository> 
+283  </repositories> 
+284 
+ 
+285 Plugin Repository : 
+286 ------------------- 
+287 -Identical to Dependency Repositories, just deals with Plugins 
+288 -Will only look for Plugins, by design usually a separate repository 
+289 
+ 
+290   <pluginRepositories> 
+291     <pluginRepository> 
+292       <id>acme core</id> 
+293       <name>Acme Internal Corporate Repository</name> 
+294       <url>http://acmecorp.com/plugins</url> 
+295       <snapshots> 
+296         <enabled>true</enabled> 
+297       </snapshots> 
+298       <releases> 
+299           <enabled>true</enabled> 
+300       </releases> 
+301     </pluginRepository> 
+302    </pluginRepositories> 
+303 
+ 
+304 
+ 
+305 
+ 
+306 
+ 
+307 Releases / Snapshots 
+308 
+ 
+309 -Snapshots and releases can come from the same repo 
+310 
+ 
+311 -Why would projects not upload everything to the central repo 
+312  Snapshots 
+ Milestones 
+314  Release Candidate 
+315  Release policies 
+316 
+ 
+317 Summary : 
+318 --------- 
+319 -Dependency repositories and Plugin repositories can be separte or the same repository 
+320 -Projects will often not upload their SNAPSHOT code up to the central repo even though 
+321  their release project is hosted there 
+322 -Plugins are usually in the same repo as dependencies 
+323 -Companies should use a corporate repository internally to help lighten the load on 
+324  the central repo 
+325 
+ 
+326 Maven plugins 
+327 -------------- 
+328 -------------- 
+329 
+ 
+330 -Plugins are tied to one of the defined phases, but can usually be overridden 
+331 -The complile plugin is already defined for you, but is often changed to use a specific version of Java. 
+332 -The jar plugin is one of the default plugins and can be configured to produce artifacts to specific needs. 
+333 -Source and Javadocs can easily be generated to be installed in your coporate repository for use by other developers. 
+334 
+ 
+335 Demo : Compliler plugin,jar,source,javadoc 
+336 <build> 
+337   <plugins> 
+338     <plugin> 
+339        <groupId>org.apache.maven.plugins</groupId> 
+340        <artifactId>maven-compiler-plugin</artifactId> 
+341        <version>2.3.1</version> 
+342        <configuration> 
+343            <source>1.7</source> 
+344            <target>1.7</source> 
+345        </configuration> 
+346      </plugin> 
+347 
+ 
+348 <!--source plugin -->    
+349      <groupId>org.apache.maven.plugins</groupId> 
+350      <artifactId>maven-source-plugin</artifactId> 
+351      <version>2.2.1</version> 
+352      <executions> 
+353        <execution> 
+354           <id>attach-sources</id> 
+355           <phase>verify</phase> 
+356              <goals> 
+357                   <goal>jar</goal> 
+358              </goals> 
+359         </execution> 
+
